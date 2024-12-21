@@ -41,13 +41,44 @@ async function run() {
             res.send(result)
         })
 
+        app.post('/jobs', async(req, res)=>{
+            const job = req.body
+            const result = await jobCollection.insertOne(job)
+            res.send(result)
+        })
+
         // job applications
         app.get('/job_application', async (req, res) => {
             const cursor = jobApplications.find()
             const result = await cursor.toArray()
             res.send(result)
-            
         })
+
+        app.get('/job_application/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { job_id: id }
+            const cursor = jobApplications.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        //-------------------------//
+
+        app.get('/job_applications', async (req, res) => {
+            const email = req.query.email
+            const query = { applicant_email: email }
+            const result = await jobApplications.find(query).toArray()
+            res.send(result)
+        })
+
+        // app.get('/job_applications/:email', async (req, res) => {
+        //     const email = req.params.email
+        //     const query = { applicant_email: email };
+        //     const result = await jobApplications.find(query).toArray()
+        //     res.send(result)
+        // })
+
+        //---------------------------//
 
         app.post('/job_application', async (req, res) => {
             const application = req.body
